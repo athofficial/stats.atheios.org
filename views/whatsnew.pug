@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1 What is new
+  p Here You can follow the latest upgrades and improvements to the service
+
+  table.table.table-striped
+    thead
+      tr
+        th(scope='col') Version
+        th(scope='col') Date
+        th(scope='col') Scope
+    tbody
+    tr
+      th(scope='row') 0.04
+      td 2019-10-05
+      td Cleaning up some labels and added moving averages
+      td Added comparitive stats
+    tr
+      th(scope='row') 0.03
+      td 2019-09-01
+      td Added coingecko widget
+    tr
+      th(scope='row') 0.02
+      td 2019-08-20
+      td Updated design and added Volume indicator on entry page
+    tr
+      th(scope='row') 0.01
+      td 2019-08-10
+      td Initial launch

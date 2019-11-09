@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1#content.bd-title= tag_headline
+  script(src='javascripts/Chart.js')
+
+  p !{tag_body}
+
+block sidebar
+  // Sidebar right
+  // Sidebar right
+  .d-none.d-xl-block.bd-toc
+    ul.section-nav
+      li.toc-entry.toc-h2
+        a(href="#diffvsvalue") Difficulty vs value

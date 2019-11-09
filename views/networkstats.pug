@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1#content.bd-title= tag_headline
+  script(src='javascripts/Chart.js')
+
+  p !{tag_body}
+
+block sidebar
+  // Sidebar right
+  // Sidebar right
+  .d-none.d-xl-block.bd-toc
+    ul.section-nav
+      li.toc-entry.toc-h2
+        a(href="#athhashrate") ATH hashrate
+      li.toc-entry.toc-h2
+        a(href="#athblocktime") ATH blocktime
+      li.toc-entry.toc-h2
+        a(href="#athdifficulty") ATH difficulty
+      li.toc-entry.toc-h2
+        a(href="#athgas") ATH gas consumption

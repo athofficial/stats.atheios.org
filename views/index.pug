@@ -1,0 +1,58 @@
+extends layout
+
+block content
+  .raw
+    .col
+      script(src='https://widgets.coingecko.com/coingecko-coin-market-ticker-list-widget.js')
+      coingecko-coin-market-ticker-list-widget(coin-id='atheios' currency='usd' locale='en')
+
+  .row
+    .col
+      .card.m-1(style="width: 18rem;")
+        .card-body
+          h5.card-title Current hashrate
+          p.card-text
+            | Monentarily hash rate
+          h3.text-danger
+            = hashrate
+    .col
+      .card.m-1(style="width: 18rem;")
+        .card-body
+          h5.card-title Current difficulty
+          p.card-text
+            | Monentarily diff
+          h3.text-danger
+            = difficulty
+    .col
+      .card.m-1(style="width: 18rem;")
+        .card-body
+          h5.card-title Current Blocktime
+          p.card-text
+            | Monentarily blocktime
+          h3.text-danger
+            = blocktime
+    .col
+      .card.m-1(style="width: 18rem;")
+        .card-body
+          h5.card-title Network status
+          p.card-text
+            | Up in green, down in red
+          p !{service}
+    .col
+      .card.m-1(style="width: 18rem;")
+        .card-body
+          h5.card-title Gas usage
+          p.card-text
+            | Should be well below 100%
+          h3.text-danger
+            = gas
+    .col
+      .card.m-1(style="width: 18rem;")
+        .card-body
+          h5.card-title Current volume
+          p.card-text
+            | Volume in USD
+          h3.text-danger
+            = volume
+
+

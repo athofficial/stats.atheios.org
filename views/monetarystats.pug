@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    // MAIN
+    h1#content.bd-title= title
+    script(src='javascripts/Chart.js')
+
+    p !{tag_body}
+
+block sidebar
+    // Sidebar right
+    .d-none.d-xl-block.bd-toc
+        ul.section-nav
+            li.toc-entry.toc-h2
+                a(href="#athsats") ATH sats chart
+            li.toc-entry.toc-h2
+                a(href="#athorderbuybook") ATH buy book
+            li.toc-entry.toc-h2
+                a(href="#athordersellbook") ATH sell book
+            li.toc-entry.toc-h2
+                a(href="#athvolume") ATH volume
