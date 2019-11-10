@@ -71,36 +71,15 @@ router.get('/', function(req, res, next) {
                                 }
 
                                 var contService = "";
+                                var url = ['api.atheios.org', 'stats.atheios.org', 'bloxxchain.atheios.org', 'wiki.atheios.org', 'www.atheios.org', 'explorer.atheios.org'];
+                                var i;
                                 if (rows.length == 1) {
-                                    if ((rows[0].up & 1) == 1) {
-                                        contService += "<a href='https://api.atheios.org' class='btn btn-success'>api.atheios.org</a><br>";
-                                    } else {
-                                        contService += "<a href='https://api.atheios.org' class='btn btn-danger'>api.atheios.org</a><br>";
-                                    }
-                                    if ((rows[0].up & 2) == 2) {
-                                        contService += "<a href='https://stats.atheios.org' class='btn btn-success'>stats.atheios.org</a><br>";
-                                    } else {
-                                        contService += "<a href='https://stats.atheios.org' class='btn btn-danger'>stats.atheios.org</a><br>";
-                                    }
-                                    if ((rows[0].up & 4) == 4) {
-                                        contService += "<a href='https://bloxxchain.atheios.org' class='btn btn-success'>bloxxchain.atheios.org</a><br>";
-                                    } else {
-                                        contService += "<a href='https://bloxxchain.atheios.org' class='btn btn-danger'>bloxxchain.atheios.org</a><br>";
-                                    }
-                                    if ((rows[0].up & 8) == 8) {
-                                        contService += "<a href='https://www.atheios.org' class='btn btn-success'>www.atheios.org</a><br>";
-                                    } else {
-                                        contService += "<a href='https://www.atheios.org' class='btn btn-danger'>www.atheios.org</a><br>";
-                                    }
-                                    if ((rows[0].up & 16) == 16) {
-                                        contService += "<a href='https://explorer.atheios.org' class='btn btn-success'>explorer.atheios.org</a><br>";
-                                    } else {
-                                        contService += "<a href='https://explorer.atheios.org' class='btn btn-danger'>explorer.atheios.org</a><br>";
-                                    }
-                                    if ((rows[0].up & 32) == 32) {
-                                        contService += "<a href='https://wiki.atheios.org' class='btn btn-success'>wiki.atheios.org</a><br>";
-                                    } else {
-                                        contService += "<a href='https://wiki.atheios.org' class='btn btn-danger'>wiki.atheios.org</a><br>";
+                                    for (i=0;i<url.length;i++) {
+                                        if ((rows[0].up & 1<<(i+1))) {
+                                            contService += "<a href=https://"+url[i]+" class='btn btn-success'>"+url[i]+"</a><br>";
+                                        } else {
+                                            contService += "<a href=https://"+url[i]+" class='btn btn-danger'>"+url[i]+"</a><br>";
+                                        }
                                     }
                                 }
 

@@ -3,10 +3,26 @@
 // Instatiate database
 var config = require("./config")();
 const Database=require('./database');
+var util =require('util');
+var request = require('request');
+
+
+getWebPage = async function(url, cb) {
+    await request.get(url, async function(error, result, body) {
+        if(!error) {
+            cb(null, result);
+        } else {
+            cb(error, null);
+        }
+    });
+};
+
+getWebPage=util.promisify(getWebPage);
+
 global.pool=new Database();
 
 global.debugon=true;
-global.version="0.04";
+global.version="0.05";
 
 if (process.env.production) {
     console.log('This is a development env...');
@@ -74,7 +90,9 @@ var cron = require('node-cron');
 console.log("Starting cron...\n")
 cron.schedule('* * * * *', async () => {
     console.log('Minute crontab initiated...\n');
-    var interval=60;
+    cron_networkstatus();
+
+    var interval = 60;
     // Get all available currency pairs with additional info.
     const option = {
         api_key: config.stex_api,
@@ -84,7 +102,7 @@ cron.schedule('* * * * *', async () => {
 
     const se = new stocks.client(option, 'https://app.stex.com/api2', 2);
 
-    se.ticker(function(res) {
+    se.ticker(function (res) {
         var obj = JSON.parse(res);
         var val = "ATH_BTC";
         var index = -1;
@@ -119,7 +137,7 @@ cron.schedule('* * * * *', async () => {
             console.log('ATH quant: ' + ath_quant);
             console.log('ATH booksell: ' + ath_book_sell);
             // Now we have all data and write them to the database
-            var vsql="INSERT INTO stex (ath_book_buy, ath_book_sell, ath_sats, ath_volume, timeinterval, created) VALUES ("+ath_book_buy+", "+ath_book_sell+ ", "+ath_sats+", "+ath_vol+", "+interval+", '"+ pool.mysqlNow() +"');";
+            var vsql = "INSERT INTO stex (ath_book_buy, ath_book_sell, ath_sats, ath_volume, timeinterval, created) VALUES (" + ath_book_buy + ", " + ath_book_sell + ", " + ath_sats + ", " + ath_vol + ", " + interval + ", '" + pool.mysqlNow() + "');";
             console.log(vsql);
             pool.query(vsql, async (error, rows, fields) => {
                 if (error) {
@@ -135,7 +153,7 @@ cron.schedule('* * * * *', async () => {
     });
     // Here we check the Atheios blockchain data
     console.log('Provide Atheios blockchain data')
-    var request = require('request');
+    var request = require('request-promise');
 
     var url = 'https://api.atheios.org/api/getHashRate';
 
@@ -161,8 +179,8 @@ cron.schedule('* * * * *', async () => {
                 json: true,
                 headers: {'User-Agent': 'request'}
             }, (err, res, data) => {
-                var gasUsed=data.gas[0].gasUsed+data.gas[1].gasUsed+data.gas[2].gasUsed+data.gas[3].gasUsed;
-                console.log("Data: %", 100*(gasUsed/(4*8000000)));
+                var gasUsed = data.gas[0].gasUsed + data.gas[1].gasUsed + data.gas[2].gasUsed + data.gas[3].gasUsed;
+                console.log("Data: %", 100 * (gasUsed / (4 * 8000000)));
                 var vsql = "INSERT INTO atheios (hashrate, difficulty, blocktime, gas, created) VALUES (" + hashrate + ", " + difficulty + ", " + blocktime + ", " + gasUsed + ", '" + pool.mysqlNow() + "');";
                 console.log(vsql);
                 pool.query(vsql, async (error, rows, fields) => {
@@ -186,119 +204,48 @@ cron.schedule('* * * * *', async () => {
 
 
 
+});
 
+async function cron_networkstatus() {
     // Here we check the Atheios network status
-    console.log('Provide Atheios network status')
-    var request = require('request');
+    console.log('Provide Atheios network status');
+    var i;
 
-    var url = ['https://api.atheios.org', 'http://stats.atheios.org', 'https://bloxxchain.atheios.org', 'http://wiki.atheios.org', 'https://www.atheios.org'];
-    var statuscode= [];
+    var url = ['https://api.atheios.org', 'https://stats.atheios.org', 'https://bloxxchain.atheios.org', 'https://wiki.atheios.org', 'https://www.atheios.org', 'https://explorer.atheios.org'];
     var up=0;
-    var url='https://api.atheios.org';
-    request.get({
-            url: url,
-            headers: {'User-Agent': 'request'}
-        }, (err, res, data) => {
-            console.log("Site:",url);
-            if (err) {
-                console.log('Error:', err);
-            } else {
-                if (res.statusCode==200)
-                {
-                    up|=1;
-                }
-                var url='https://stats.atheios.org';
-                request.get({
-                    url: url,
-                    headers: {'User-Agent': 'request'}
-                }, (err, res, data) => {
-                    console.log("Site:",url);
-                    if (err) {
-                        console.log('Error:', err);
-                    } else {
-                        if (res.statusCode==200)
-                        {
-                            up|=2;
-                        }
-                        var url='https://bloxxchain.atheios.org';
-                        request.get({
-                            url: url,
-                            headers: {'User-Agent': 'request'}
-                        }, (err, res, data) => {
-                            console.log("Site:",url);
-                            if (err) {
-                                console.log('Error:', err);
-                            } else {
-                                if (res.statusCode==200)
-                                {
-                                    up|=4;
-                                }
-                                var url='https://www.atheios.org';
-                                request.get({
-                                    url: url,
-                                    headers: {'User-Agent': 'request'}
-                                }, (err, res, data) => {
-                                    console.log("Site:",url);
-                                    if (err) {
-                                        console.log('Error:', err);
-                                    } else {
-                                        if (res.statusCode==200)
-                                        {
-                                            up|=8;
-                                        }
-                                        var url='https://explorer.atheios.org';
-                                        request.get({
-                                            url: url,
-                                            headers: {'User-Agent': 'request'}
-                                        }, (err, res, data) => {
-                                            console.log("Site:", url);
-                                            if (err) {
-                                                console.log('Error:', err);
-                                            } else {
-                                                if (res.statusCode == 200) {
-                                                    up |= 16;
-                                                }
-                                                var url='https://wiki.atheios.org';
-                                                request.get({
-                                                    url: url,
-                                                    headers: {'User-Agent': 'request'}
-                                                }, (err, res, data) => {
-                                                    console.log("Site:", url);
-                                                    if (err) {
-                                                        console.log('Error:', err);
-                                                    } else {
-                                                        if (res.statusCode == 200) {
-                                                            up |= 32;
-                                                        }
-                                                        var vsql = "INSERT INTO networkstatus (up, res1, created) VALUES (" + up + ", " + 0 + ", '" + pool.mysqlNow() + "');";
-                                                        console.log(vsql);
-                                                        pool.query(vsql, async (error, rows, fields) => {
-                                                            if (error) {
-                                                                if (debugon)
-                                                                    console.log('>>> Error: ' + error);
-                                                            } else {
+    var cert=0;
+    for (i=0;i<url.length;i++) {
+        console.log('Count: %d, Url: %s',i, url[i]);
+        try {
+            var response= await getWebPage(url[i]);
 
-                                                            }
-
-                                                        });
-                                                    }
-                                                });
-
-                                            }
-                                        });
-
-                                    }
-                                });
-
-                            }
-                        });
-
-                    }
-                });
-
+            if (response.statusCode == 200) {
+                console.log('Ok');
+                up |= 1<<(i + 1);
             }
-        });
+        } catch (err) {
+            if (err.code=='CERT_HAS_EXPIRED') {
+                console.log('Cert error');
+                cert |= 1<<(i + 1);
+            } else {
+                console.log(err.code);
+            }
+        }
+
+    }
+    var vsql = "INSERT INTO networkstatus (up, res1, created) VALUES (" + up + ", " + cert + ", '" + pool.mysqlNow() + "');";
+    console.log(vsql);
+    await pool.query(vsql, async (error, rows, fields) => {
+        if (error) {
+            if (debugon)
+                console.log('>>> Error: ' + error);
+        } else {
+
+        }
+
     });
+    console.log("All data in");
+}
 
 
 

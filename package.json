@@ -17,6 +17,7 @@
     "popper.js": "^1.15.0",
     "pug": "2.0.0-beta11",
     "request": "^2.88.0",
+    "request-promise": "^4.2.5",
     "stocks-exchange-client": "^2.2.1"
   }
 }
