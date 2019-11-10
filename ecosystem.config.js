@@ -3,13 +3,13 @@ module.exports = {
     {
       name: 'stats.atheios.org',
       script: './bin/www',
-      cwd: '/home/fdm/stats',
+      cwd: '/home/fdm/stats.atheios.org',
       instance_id_env: '0',
       watch: true,
       ignore_watch : ['node_modules', 'Logs', 'Downloads', '.git'],
       error_file:
-        '/home/fdm/stats/Logs/error.log',
-      out_file: '/home/fdm/stats/Logs/out.log',
+        '/home/fdm/stats.atheios.org/Logs/error.log',
+      out_file: '/home/fdm/stats.atheios.org/Logs/out.log',
       env: {
         NODE_ENV: 'development'
       },
