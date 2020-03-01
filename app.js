@@ -23,7 +23,7 @@ getWebPage=util.promisify(getWebPage);
 global.pool=new Database();
 
 global.debugon=true;
-global.version="0.06";
+global.version="0.0.6";
 
 if (config.development) {
     logger.info('This is a development env...');

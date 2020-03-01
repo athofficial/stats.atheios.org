@@ -18,6 +18,7 @@
     "pug": "2.0.0-beta11",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
-    "stocks-exchange-client": "^2.2.1"
+    "stocks-exchange-client": "^2.3.1",
+    "winston": "^3.2.1"
   }
 }
