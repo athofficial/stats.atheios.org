@@ -3,10 +3,15 @@
 /**
  * Module dependencies.
  */
+var logger = require("../logger");
+logger.info("Logging initiated");
+
+global.config = require("../config")();
 
 var app = require('../app');
-var debug = require('debug')('kpi:server');
+var debug = require('debug')('stats:server');
 var http = require('http');
+
 
 /**
  * Get port from environment and store in Express.
@@ -14,6 +19,7 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
+logger.info("Server started: " + global.config.httphost);
 
 /**
  * Create HTTP server.

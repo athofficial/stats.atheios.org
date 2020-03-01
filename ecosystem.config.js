@@ -10,12 +10,6 @@ module.exports = {
       error_file:
         '/home/fdm/stats.atheios.org/Logs/error.log',
       out_file: '/home/fdm/stats.atheios.org/Logs/out.log',
-      env: {
-        NODE_ENV: 'development'
-      },
-      env_production: {
-        NODE_ENV: 'production'
-      }
     }
   ]
 };
